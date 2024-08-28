@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.view.ContextMenu;
@@ -21,7 +20,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.view.autofill.AutofillManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -94,14 +92,14 @@ public final class TermuxActivity extends AppCompatActivity implements ServiceCo
     TerminalView mTerminalView;
 
     /**
-     * The {@link TerminalViewClient} interface implementation to allow for communication between
-     * {@link TerminalView} and {@link TermuxActivity}.
+     *  The {@link TerminalViewClient} interface implementation to allow for communication between
+     *  {@link TerminalView} and {@link TermuxActivity}.
      */
     TermuxTerminalViewClient mTermuxTerminalViewClient;
 
     /**
-     * The {@link TerminalSessionClient} interface implementation to allow for communication between
-     * {@link TerminalSession} and {@link TermuxActivity}.
+     *  The {@link TerminalSessionClient} interface implementation to allow for communication between
+     *  {@link TerminalSession} and {@link TermuxActivity}.
      */
     TermuxTerminalSessionActivityClient mTermuxTerminalSessionActivityClient;
 
@@ -268,7 +266,7 @@ public final class TermuxActivity extends AppCompatActivity implements ServiceCo
             if (!bindService(serviceIntent, this, 0))
                 throw new RuntimeException("bindService() failed");
         } catch (Exception e) {
-            Logger.logStackTraceWithMessage(LOG_TAG, "TermuxActivity failed to start TermuxService", e);
+            Logger.logStackTraceWithMessage(LOG_TAG,"TermuxActivity failed to start TermuxService", e);
             Logger.showToast(this,
                 getString(e.getMessage() != null && e.getMessage().contains("app is in background") ?
                     R.string.error_termux_service_start_failed_bg : R.string.error_termux_service_start_failed_general),
@@ -378,6 +376,9 @@ public final class TermuxActivity extends AppCompatActivity implements ServiceCo
     }
 
 
+
+
+
     /**
      * Part of the {@link ServiceConnection} interface. The service is bound with
      * {@link #bindService(Intent, ServiceConnection, int)} in {@link #onCreate(Bundle)} which will cause a call to this
@@ -438,12 +439,17 @@ public final class TermuxActivity extends AppCompatActivity implements ServiceCo
     }
 
 
+
+
+
+
     private void reloadProperties() {
         mProperties.loadTermuxPropertiesFromDisk();
 
         if (mTermuxTerminalViewClient != null)
             mTermuxTerminalViewClient.onReloadProperties();
     }
+
 
 
     private void setActivityTheme() {
@@ -464,6 +470,7 @@ public final class TermuxActivity extends AppCompatActivity implements ServiceCo
     }
 
 
+
     public void addTermuxActivityRootViewGlobalLayoutListener() {
         getTermuxActivityRootView().getViewTreeObserver().addOnGlobalLayoutListener(getTermuxActivityRootView());
     }
@@ -472,6 +479,7 @@ public final class TermuxActivity extends AppCompatActivity implements ServiceCo
         if (getTermuxActivityRootView() != null)
             getTermuxActivityRootView().getViewTreeObserver().removeOnGlobalLayoutListener(getTermuxActivityRootView());
     }
+
 
 
     private void setTermuxTerminalViewAndClients() {
@@ -499,13 +507,13 @@ public final class TermuxActivity extends AppCompatActivity implements ServiceCo
     }
 
 
+
     private void setTerminalToolbarView(Bundle savedInstanceState) {
         mTermuxTerminalExtraKeys = new TermuxTerminalExtraKeys(this, mTerminalView,
             mTermuxTerminalViewClient, mTermuxTerminalSessionActivityClient);
 
         final ViewPager terminalToolbarViewPager = getTerminalToolbarViewPager();
-        if (mPreferences.shouldShowTerminalToolbar())
-            terminalToolbarViewPager.setVisibility(View.VISIBLE);
+        if (mPreferences.shouldShowTerminalToolbar()) terminalToolbarViewPager.setVisibility(View.VISIBLE);
 
         ViewGroup.LayoutParams layoutParams = terminalToolbarViewPager.getLayoutParams();
         mTerminalToolbarDefaultHeight = layoutParams.height;
@@ -550,10 +558,10 @@ public final class TermuxActivity extends AppCompatActivity implements ServiceCo
         final EditText textInputView = findViewById(R.id.terminal_toolbar_text_input);
         if (textInputView != null) {
             String textInput = textInputView.getText().toString();
-            if (!textInput.isEmpty())
-                savedInstanceState.putString(ARG_TERMINAL_TOOLBAR_TEXT_INPUT, textInput);
+            if (!textInput.isEmpty()) savedInstanceState.putString(ARG_TERMINAL_TOOLBAR_TEXT_INPUT, textInput);
         }
     }
+
 
 
     private void setSettingsButtonView() {
@@ -588,6 +596,9 @@ public final class TermuxActivity extends AppCompatActivity implements ServiceCo
     }
 
 
+
+
+
     @SuppressLint("RtlHardcoded")
     @Override
     public void onBackPressed() {
@@ -605,9 +616,7 @@ public final class TermuxActivity extends AppCompatActivity implements ServiceCo
         }
     }
 
-    /**
-     * Show a toast and dismiss the last one if still visible.
-     */
+    /** Show a toast and dismiss the last one if still visible. */
     public void showToast(String text, boolean longDuration) {
         if (text == null || text.isEmpty()) return;
         if (mLastToast != null) mLastToast.cancel();
@@ -615,6 +624,7 @@ public final class TermuxActivity extends AppCompatActivity implements ServiceCo
         mLastToast.setGravity(Gravity.TOP, 0, 0);
         mLastToast.show();
     }
+
 
 
     @Override
@@ -642,9 +652,7 @@ public final class TermuxActivity extends AppCompatActivity implements ServiceCo
         menu.add(Menu.NONE, CONTEXT_MENU_REPORT_ID, Menu.NONE, R.string.action_report_issue);
     }
 
-    /**
-     * Hook system menu to show context menu instead.
-     */
+    /** Hook system menu to show context menu instead. */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         mTerminalView.showContextMenu();
@@ -667,12 +675,12 @@ public final class TermuxActivity extends AppCompatActivity implements ServiceCo
                 return true;
             case CONTEXT_MENU_NEW_SESSION:
                 mTermuxTerminalSessionActivityClient.addNewSession(false, null);
-                return true;
             case CONTEXT_MENU_AUTOFILL_USERNAME:
                 mTerminalView.requestAutoFillUsername();
                 return true;
             case CONTEXT_MENU_AUTOFILL_PASSWORD:
                 mTerminalView.requestAutoFillPassword();
+                return true;
             case CONTEXT_MENU_RESET_TERMINAL_ID:
                 onResetTerminalSession(session);
                 return true;
@@ -744,7 +752,6 @@ public final class TermuxActivity extends AppCompatActivity implements ServiceCo
                 .setNegativeButton(android.R.string.cancel, null).show();
         }
     }
-
     private void toggleKeepScreenOn() {
         if (mTerminalView.getKeepScreenOn()) {
             mTerminalView.setKeepScreenOn(false);
@@ -754,6 +761,7 @@ public final class TermuxActivity extends AppCompatActivity implements ServiceCo
             mPreferences.setKeepScreenOn(true);
         }
     }
+
 
 
     /**
@@ -769,7 +777,7 @@ public final class TermuxActivity extends AppCompatActivity implements ServiceCo
                 int requestCode = isPermissionCallback ? -1 : PermissionUtils.REQUEST_GRANT_STORAGE_PERMISSION;
 
                 // If permission is granted, then also setup storage symlinks.
-                if (PermissionUtils.checkAndRequestLegacyOrManageExternalStoragePermission(
+                if(PermissionUtils.checkAndRequestLegacyOrManageExternalStoragePermission(
                     TermuxActivity.this, requestCode, !isPermissionCallback)) {
                     if (isPermissionCallback)
                         Logger.logInfoAndShowToast(TermuxActivity.this, LOG_TAG,
@@ -788,7 +796,7 @@ public final class TermuxActivity extends AppCompatActivity implements ServiceCo
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Logger.logVerbose(LOG_TAG, "onActivityResult: requestCode: " + requestCode + ", resultCode: " + resultCode + ", data: " + IntentUtils.getIntentString(data));
+        Logger.logVerbose(LOG_TAG, "onActivityResult: requestCode: " + requestCode + ", resultCode: "  + resultCode + ", data: "  + IntentUtils.getIntentString(data));
         if (requestCode == PermissionUtils.REQUEST_GRANT_STORAGE_PERMISSION) {
             requestStoragePermission(true);
         }
@@ -797,11 +805,12 @@ public final class TermuxActivity extends AppCompatActivity implements ServiceCo
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        Logger.logVerbose(LOG_TAG, "onRequestPermissionsResult: requestCode: " + requestCode + ", permissions: " + Arrays.toString(permissions) + ", grantResults: " + Arrays.toString(grantResults));
+        Logger.logVerbose(LOG_TAG, "onRequestPermissionsResult: requestCode: " + requestCode + ", permissions: "  + Arrays.toString(permissions) + ", grantResults: "  + Arrays.toString(grantResults));
         if (requestCode == PermissionUtils.REQUEST_GRANT_STORAGE_PERMISSION) {
             requestStoragePermission(true);
         }
     }
+
 
 
     public int getNavBarHeight() {
@@ -867,6 +876,7 @@ public final class TermuxActivity extends AppCompatActivity implements ServiceCo
     }
 
 
+
     public TermuxService getTermuxService() {
         return mTermuxService;
     }
@@ -898,6 +908,8 @@ public final class TermuxActivity extends AppCompatActivity implements ServiceCo
     public TermuxAppSharedProperties getProperties() {
         return mProperties;
     }
+
+
 
 
     public static void updateTermuxActivityStyling(Context context, boolean recreateActivity) {
@@ -989,6 +1001,7 @@ public final class TermuxActivity extends AppCompatActivity implements ServiceCo
             TermuxActivity.this.recreate();
         }
     }
+
 
 
     public static void startTermuxActivity(@NonNull final Context context) {
