@@ -521,7 +521,7 @@ public class TermuxTerminalSessionActivityClient extends TermuxTerminalSessionCl
             if (fontFile.exists() && fontFile.length() > 0) {
                 newTypeface = Typeface.createFromFile(fontFile);
             } else {
-                newTypeface = Typeface.createFromAsset(mActivity.getAssets(), "font.ttf");
+                newTypeface = Typeface.createFromAsset(mActivity.getAssets(), "font.otf");
             }
             mActivity.getTerminalView().setTypeface(newTypeface);
         } catch (Exception e) {
